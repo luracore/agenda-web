@@ -1,7 +1,7 @@
 package com.agenda.controller;
 
-import com.agenda.model.Atendimento;
-import com.agenda.repository.AtendimentoRepository;
+import com.agenda.model.Exame;
+import com.agenda.repository.ExameRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,27 +11,27 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/atendimentos")
+@RequestMapping("/api/exames")
 @CrossOrigin(origins = "*")
-public class AtendimentoController {
+public class ExameController {
 
-    private final AtendimentoRepository repository;
+    private final ExameRepository repository;
 
-    public AtendimentoController(AtendimentoRepository repository) {
+    public ExameController(ExameRepository repository) {
         this.repository = repository;
     }
 
     // CREATE
     @PostMapping
-    public ResponseEntity<Atendimento> criar(@Valid @RequestBody Atendimento atendimento) {
-        Atendimento salvo = repository.save(atendimento);
+    public ResponseEntity<Exame> criar(@Valid @RequestBody Exame exame) {
+        Exame salvo = repository.save(exame);
         return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }
 
     // READ ALL
     @GetMapping
-    public ResponseEntity<List<Atendimento>> listar() {
-        List<Atendimento> lista = repository.findAllByOrderByDataAscHoraAsc();
+    public ResponseEntity<List<Exame>> listar() {
+        List<Exame> lista = repository.findAll();
         return ResponseEntity.ok(lista);
     }
 
@@ -46,16 +46,13 @@ public class AtendimentoController {
     // UPDATE
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizar(@PathVariable Long id,
-                                       @Valid @RequestBody Atendimento dados) {
+                                       @Valid @RequestBody Exame dados) {
         return repository.findById(id)
-                .map(at -> {
-                    at.setTitulo(dados.getTitulo());
-                    at.setData(dados.getData());
-                    at.setHora(dados.getHora());
-                    at.setDescricao(dados.getDescricao());
-                    at.setLink(dados.getLink());
-                    at.setReceita(dados.getReceita());
-                    return ResponseEntity.ok(repository.save(at));
+                .map(ex -> {
+                    ex.setDescricao(dados.getDescricao());
+                    ex.setLink(dados.getLink());
+                    ex.setPosologia(dados.getPosologia());
+                    return ResponseEntity.ok(repository.save(ex));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -64,9 +61,9 @@ public class AtendimentoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletar(@PathVariable Long id) {
         return repository.findById(id)
-                .map(at -> {
-                    repository.delete(at);
-                    return ResponseEntity.ok(Map.of("mensagem", "Atendimento removido com sucesso"));
+                .map(ex -> {
+                    repository.delete(ex);
+                    return ResponseEntity.ok(Map.of("mensagem", "Exame removido com sucesso"));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
