@@ -8,14 +8,13 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "compromissos")
+@Table(name = "Atendimento")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Compromisso {
+public class Atendimento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,10 +32,9 @@ public class Compromisso {
     @Column(columnDefinition = "TEXT")
     private String descricao;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "contato_id")
-    private Contato contato;
+    @Column(length = 200)
+    private String link;
 
-    @Column(name = "criado_em")
-    private LocalDateTime criadoEm = LocalDateTime.now();
+    @Column(length = 200)
+    private String receita;
 }
